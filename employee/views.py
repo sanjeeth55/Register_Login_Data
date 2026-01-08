@@ -27,8 +27,6 @@ def login(request):
             return render(request, 'login_page.html')     
     return render(request, 'login_page.html')
 
-
-
 def register(request):
     if request.method == 'POST':
         username = request.POST.get('username')
