@@ -33,15 +33,22 @@ def register(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         
-        employees = Employee.objects.filter(user_name = username,password=password)
+        employees = Employee.objects.filter(user_name = username,password =password, email= email)
+        print(employees)
         print(username, password, email)
 
         if employees.exists():
-            messages.error(request, 'user name is alread existed')
-            return render(request, 'register.html')
-        
-        Employee.objects.create(user_name=username, email=email, password=password)
-        messages.error(request, 'Register has been successful completed, Login to access the site')
+            print("123")
+            messages.error(request, 'user is alread existed try login')
+            return render(request, 'login_page.html')
+        else:       
+            Employee.objects.create(
+                user_name=username, 
+                email=email, 
+                password=password,
+                )
+            
+            messages.error(request, 'Register has been successful completed, Login to access the site')
         return redirect('home')   
     
     return render(request, 'register.html')

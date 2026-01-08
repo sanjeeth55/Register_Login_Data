@@ -28,7 +28,7 @@ body {
 .login-container h2 {
     text-align: center;
     margin-bottom: 25px;
-    color: #333;
+    color: #a440a5;
 }
 
 /* ===== Form Elements ===== */
@@ -37,7 +37,7 @@ body {
     margin-bottom: 6px;
     font-weight: 600;
     font-size: 14px;
-    color: #444;
+    color: #984398;
 }
 
 .login-container input {
@@ -99,6 +99,6 @@ body {
 .login-container p {
     margin-top: 15px;
     font-size: 13px;
-    color: #d9534f;
+    color: #9f1fa3;
     text-align: center;
 }

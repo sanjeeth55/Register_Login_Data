@@ -49,9 +49,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+
+    #Session timeout
+    'django.contrib.sessions.middleware.SessionMiddleware',
+
 ]
 
 ROOT_URLCONF = 'login.urls'
+
 
 TEMPLATES = [
     {
@@ -67,6 +72,13 @@ TEMPLATES = [
         },
     },
 ]
+
+# session time out
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 120 # Sec
+SESSION_SAVE_EVERY_REQUEST = True
+
 
 WSGI_APPLICATION = 'login.wsgi.application'
 
