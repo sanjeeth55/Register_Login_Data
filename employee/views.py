@@ -1,63 +1,100 @@
 from django.contrib import messages
-from django.shortcuts import render,redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
-
+from django.shortcuts import render, redirect
 from employee.models import Employee
+from .forms import LoginForm
+from django.contrib.auth.hashers import make_password, check_password
+from .decorators import employee_login_required
 
 
+def login_view(request):
+    if 'employee_id' in request.session:
+        return redirect('home')
 
-#login page to validate the login credantials
-
-def login(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        employees = Employee.objects.filter(user_name=username,password=password)
-        
-        if employees.exists():
-            print(employees)
-            for i in employees:
-                if i.user_name == username and i.password == password:
-                    return redirect('home')
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            identifier = form.cleaned_data['identifier']
+            password = form.cleaned_data['password']
+
+            try:
+                try:
+                    employee = Employee.objects.get(user_name=identifier)
+                except Employee.DoesNotExist:
+                    employee = Employee.objects.get(email=identifier)
+
+            except Employee.DoesNotExist:
+                messages.error(request, "Employee not found")
+                return redirect('login')
+
+            if not employee.password.startswith('pbkdf2_'):
+                if password == employee.password:
+                    employee.password = make_password(password)
+                    employee.save()
                 else:
-                    return render(request, 'login_page.html')
-        else:           
-            messages.error(request, 'username ane password not found')
-            return render(request, 'login_page.html')     
-    return render(request, 'login_page.html')
+                    messages.error(request, "Invalid password")
+                    return redirect('login')
+            else:
+                if not check_password(password, employee.password):
+                    messages.error(request, "Invalid password")
+                    return redirect('login')
+
+            request.session['employee_id'] = employee.id
+            request.session['employee_username'] = employee.user_name
+            return redirect('home')
+
+    else:
+        form = LoginForm()
+
+    return render(request, 'login_page.html', {'form': form})
+
 
 def register(request):
+    if 'employee_id' in request.session:
+        return redirect('login')
+
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        
-        employees = Employee.objects.filter(user_name = username,password =password, email= email)
-        print(employees)
-        print(username, password, email)
 
-        if employees.exists():
-            print("123")
-            messages.error(request, 'user is alread existed try login')
-            return render(request, 'login_page.html')
-        else:       
-            Employee.objects.create(
-                user_name=username, 
-                email=email, 
-                password=password,
-                )
-            
-            messages.error(request, 'Register has been successful completed, Login to access the site')
-        return redirect('home')   
-    
+        if Employee.objects.filter(user_name=username).exists():
+            messages.error(request, 'User already exists')
+            return redirect('register')
+
+        Employee.objects.create(
+            user_name=username,
+            email=email,
+            password=make_password(password)
+        )
+
+        messages.success(request, 'Registration successful. Please login.')
+        return redirect('login')
+
     return render(request, 'register.html')
- 
- 
-# @login_required(login_url='login')
+
+
+@employee_login_required
 def home(request):
-    return render(request, 'home.html')
+    username = request.session.get('employee_username')
+    return render(request, 'home.html', {'username': username})
 
 
-def logout(request):
+def logout_view(request):
+    request.session.flush()
+    messages.success(request, "You have been logged out")
     return redirect('login')
+
+
+@employee_login_required
+def about(request):
+    return render(request, 'about.html')
+
+
+@employee_login_required
+def features(request):
+    return render(request, 'features.html')
+
+
+@employee_login_required
+def contact(request):
+    return render(request, 'contact.html')

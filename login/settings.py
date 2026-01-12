@@ -50,8 +50,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 
-    #Session timeout
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    #Session timeout,
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
 
 ]
 
@@ -75,8 +75,9 @@ TEMPLATES = [
 
 # session time out
 
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-SESSION_COOKIE_AGE = 120 # Sec
+SESSION_EXPIRE_SECONDS = 20
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_TIMEOUT_REDIRECT = 'login'
 SESSION_SAVE_EVERY_REQUEST = True
 
 

@@ -1,14 +1,6 @@
-# from django import forms
-# from .models import Employee
+from django import forms
 
 
-# class Employee_Forms(forms.ModelForm):
-#     class Meta:
-#         model = Employee
-#         fields = [ 'user_name', 'email', 'password']
-
-
-# class Employee_Login_Forms(forms.ModelForm):
-#     class Meta:
-#         model = Employee
-#         fields = ['user_name', 'email', 'password' ]
+class LoginForm(forms.Form):
+    identifier = forms.CharField(label='Username or Email', max_length=250)
+    password = forms.CharField(widget=forms.PasswordInput)
