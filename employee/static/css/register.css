@@ -62,3 +62,9 @@ body {
     transform: translateY(0);
     box-shadow: none;
 }
+
+.login-container .error-messages p {
+    margin-top: 20px;
+    color: red;         
+    font-weight: 600;   
+}

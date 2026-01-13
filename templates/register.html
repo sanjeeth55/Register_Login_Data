@@ -27,27 +27,27 @@
   </head>
   <body>
     <div class="login-box">
+    
       <h2>Registration Page</h2>
-      <form method="post">
-        {% csrf_token %}
-
-
-        <input type="text" name="username" placeholder="Username" required />
-        <input type="email" name="email" placeholder="Email" required />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          required
-        />
-
-        <button type="submit">Register</button>
-        
-      </form>
+    
+    <form method="POST">
+    
+      {% csrf_token %}
+    
+    <input type="text" name="username" required placeholder="Enter Your User Nme">
+    
+    <input type="email" name="email" required placeholder="Enter Your Email">
+    
+    <input type="password" name="password" required placeholder="Password">
+    
+    <button type="submit">Register</button>
+    
+    </form>
 
       {% for message in messages %}
       <p>{{ message }}</p>
       {% endfor %}
+
     </div>
   </body>
 </html>

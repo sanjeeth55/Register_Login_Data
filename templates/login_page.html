@@ -19,6 +19,7 @@
   <body>
     <div class="login-container">
       <h2>Login</h2>
+      
       <form method='POST'>
        {% csrf_token %}
         {{ form.as_p }}
@@ -26,11 +27,15 @@
         <button type="submit">Login</button></br>
         
         <a href="{% url 'register' %}" class="register-link">Register</a>
-
-        {% for message in messages %}
-        <p>{{ message }}</p>
-        {% endfor %}
+        
+         <div class="error-messages">
+            {% if messages %}
+              {% for message in messages %}
+               <p style=" margin-top: 20px; color: red; font-weight: 600;"> {{ message }}</p>
+              {% endfor %}
+            {% endif %}
+         </div>
       </form>
     </div>
-  </body>
+ </body>
 </html>
